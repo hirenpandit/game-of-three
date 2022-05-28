@@ -28,16 +28,18 @@ public class GameServiceImpl implements GameService{
     public MoveDTO playMove(MoveDTO move) {
         firstMove = null;
         int curr = move.getCurr();
+        String gameId = move.getGameId();
         String playerId = playerService.getRivalPlayer(
+                gameId,
                 move.getPlayerId())
                 .orElseThrow(() -> new IllegalStateException("second player not found!!")
                 );
         if(curr % 3 == 0){
-            return new MoveDTO(curr, curr/3, ADD_ZERO, playerId);
+            return new MoveDTO(curr, curr/3, ADD_ZERO, playerId, gameId);
         } else if((curr + 1) % 3 == 0) {
-            return new MoveDTO(curr, (curr + 1)/3, ADD_ONE, playerId);
+            return new MoveDTO(curr, (curr + 1)/3, ADD_ONE, playerId, gameId);
         } else {
-            return new MoveDTO(curr, (curr - 1)/3, SUBTRACT_ONE, playerId);
+            return new MoveDTO(curr, (curr - 1)/3, SUBTRACT_ONE, playerId, gameId);
         }
     }
 }

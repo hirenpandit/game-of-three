@@ -1,17 +1,18 @@
 var stompClient = null;
 let count = 0;
 let playerId = "";
+let gameId = "";
 
 function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
+    $("#play").prop("disabled", connected);
+    $("#end").prop("disabled", !connected);
     if (connected) {
         $("#conversation").show();
     }
     else {
         $("#conversation").hide();
     }
-    $("#greetings").html("");
+    $("#moves").html("");
 }
 
 function connect() {
@@ -33,6 +34,7 @@ function connect() {
                 disconnect();
                 showMoves("Only two player can play game at a time!");
             } else {
+                gameId = player.gameId;
                 if(player.count==2)
                     showMoves("Player 2 Joined!");
                 else
@@ -50,16 +52,25 @@ function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
+    count = 0;
+    gameId = "";
     setConnected(false);
-    console.log("Disconnected");
+    console.log("Game Over!");
 }
 
 function sendMove() {
     if(count === 0){
-        count = $("#name").val();
-        stompClient.send("/app/first-move", {}, JSON.stringify({'curr': count, 'playerId': playerId}));
+        count = $("#move").val();
+        stompClient.send(
+                        "/app/first-move", 
+                        {}, 
+                        JSON.stringify({'curr': count, 'playerId': playerId, 'gameId': gameId})
+                        );
     } else {
-        stompClient.send("/app/move", {}, JSON.stringify({'curr': count, 'playerId': playerId}));
+        stompClient.send(
+                        "/app/move", 
+                        {}, 
+                        JSON.stringify({'curr': count, 'playerId': playerId, 'gameId': gameId}));
     }
     
 }
@@ -77,8 +88,8 @@ $(function () {
         e.preventDefault();
     });
     playerId = generateId()
-    $( "#connect" ).click(function() { connect(); });
-    $( "#disconnect" ).click(function() { disconnect(); });
+    $( "#play" ).click(function() { connect(); });
+    $( "#end" ).click(function() { disconnect(); });
     $( "#send" ).click(function() { sendMove(); });
 });
 

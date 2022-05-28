@@ -15,35 +15,41 @@ import java.util.*;
 public class PlayerServiceImpl implements PlayerService{
 
     private final ApplicationEventPublisher publisher;
-    Set<String> players = new LinkedHashSet<>();
 
-    Stack<LinkedHashSet<String>> gameStack = new Stack<>();
+    LinkedHashMap<String, List<String>> gameMap = new LinkedHashMap<>();
 
     @Override
     public synchronized PlayerDTO addPlayer(String playerId) {
-        if(players.size() == 2){
-            throw new IllegalStateException("Only two player can play game at a time!");
+        LinkedList<Map.Entry<String, List<String>>> linkedList = new LinkedList<>(gameMap.entrySet());
+        PlayerDTO player = null;
+        if(linkedList.isEmpty()|| linkedList.getLast().getValue().size()==2){
+            ArrayList<String> list = new ArrayList<>();
+            list.add(playerId);
+            String gameId = UUID.randomUUID().toString();
+            gameMap.put(gameId, list);
+            player = new PlayerDTO(gameId, playerId, true, 1);
+        } else {
+            Map.Entry<String, List<String>> last = linkedList.getLast();
+            last.getValue().add(playerId);
+            player = new PlayerDTO(last.getKey(), playerId, true, 2);
+            publisher.publishEvent(new PlayerRegisterEvent(player));
         }
-        players.add(playerId);
-        log.info("new player added with id : {}", playerId);
-        PlayerDTO playerDTO = new PlayerDTO(playerId, true, players.size());
-        if(players.size() == 2) {
-            publisher.publishEvent(new PlayerRegisterEvent(playerDTO));
-        }
-        return playerDTO;
+        return player;
     }
 
     @Override
-    public synchronized void removePlayers(){
-        players.clear();
+    public synchronized void removePlayers(String gameId){
+        gameMap.remove(gameId);
     }
 
     @Override
-    public Optional<String> getRivalPlayer(String playerId) {
-        return players
-                .stream()
-                .filter(id -> !id.equals(playerId))
-                .findFirst();
+    public Optional<String> getRivalPlayer(String gameId, String playerId) {
+        return gameMap.entrySet()
+                    .stream()
+                    .filter(gId -> gId.getKey().equals(gameId))
+                    .flatMap(entry -> entry.getValue().stream())
+                    .filter(pId -> !pId.equals(playerId))
+                    .findFirst();
     }
 
 }

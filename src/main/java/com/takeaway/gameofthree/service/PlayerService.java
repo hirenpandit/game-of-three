@@ -11,7 +11,7 @@ public interface PlayerService {
 
     PlayerDTO addPlayer(String playerId);
 
-    void removePlayers();
+    void removePlayers(String gameId);
 
-    Optional<String> getRivalPlayer(String playerId);
+    Optional<String> getRivalPlayer(String gameId, String playerId);
 }

@@ -43,7 +43,7 @@ public class GameController {
             player = playerService.addPlayer(playerId);
         } catch(IllegalStateException ex){
             log.error("unable to add player: {}",ex);
-            player = new PlayerDTO(playerId, false, 0);
+            player = new PlayerDTO(null, playerId, false, 0);
         }
         messagingTemplate.convertAndSend("/topic/"+playerId+"/play", player);
     }

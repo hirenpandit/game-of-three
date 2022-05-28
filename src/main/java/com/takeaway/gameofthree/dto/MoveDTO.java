@@ -15,5 +15,6 @@ public class MoveDTO {
     int next;
     String operation;
     String playerId;
+    String gameId;
 
 }

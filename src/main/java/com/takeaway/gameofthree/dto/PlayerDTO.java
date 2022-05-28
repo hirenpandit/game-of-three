@@ -9,10 +9,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PlayerDTO {
 
+    String gameId;
     String playerId;
-
     boolean isSuccess;
-
     int  count;
-
 }
