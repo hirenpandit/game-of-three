@@ -23,10 +23,8 @@ function connect() {
         stompClient.subscribe('/topic/'+playerId+'/move', function (response) {
             const move = JSON.parse(response.body)
             count = move.next;
-            if(count==0){
-                alert("you win!");
-            }
             showMoves("current - "+ move.curr+" next - "+ move.next+" operation - "+move.operation);
+            $("#send").prop("disabled", false);
         });
         stompClient.subscribe('/topic/'+playerId+'/play', (response) => {
             const player = JSON.parse(response.body);
@@ -36,10 +34,20 @@ function connect() {
             } else {
                 gameId = player.gameId;
                 if(player.count==2)
-                    showMoves("Player 2 Joined!");
+                    showNotification("Player 2 Joined!");
                 else
-                    showMoves("Player 1 Joined! Waiting for 2nd Player to Join");
+                    showNotification("Player 1 Joined! Waiting for 2nd Player to Join");
             }
+        });
+        stompClient.subscribe('/topic/'+playerId+'/status', (response) => {
+            const status = JSON.parse(response.body);
+            let msg = "";
+            if(status.win === true){
+                msg = "You win!🎉"
+            } else {
+                msg = "You lose!😕"
+            }
+            showNotification(msg);
         });
     });
     setTimeout(() => {
@@ -59,24 +67,23 @@ function disconnect() {
 }
 
 function sendMove() {
-    if(count === 0){
+    if(count == 0){
         count = $("#move").val();
-        stompClient.send(
-                        "/app/first-move", 
-                        {}, 
-                        JSON.stringify({'curr': count, 'playerId': playerId, 'gameId': gameId})
-                        );
-    } else {
-        stompClient.send(
-                        "/app/move", 
-                        {}, 
-                        JSON.stringify({'curr': count, 'playerId': playerId, 'gameId': gameId}));
-    }
-    
+    } 
+    stompClient.send(
+                    "/app/move", 
+                    {}, 
+                    JSON.stringify({'curr': count, 'playerId': playerId, 'gameId': gameId}));
+    $("#send").prop("disabled", true);
 }
 
 function startPlay(){
     stompClient.send("/app/play", {}, playerId);
+}
+
+function showNotification(msg) {
+    $("#notification").empty();
+    $("#notification").append("<div>"+msg+"<div>");
 }
 
 function showMoves(move) {

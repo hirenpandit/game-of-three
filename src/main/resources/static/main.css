@@ -3,6 +3,10 @@ body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+.form-inline {
+    padding: 10px;
+}
+
 #main-content {
     max-width: 940px;
     padding: 2em 3em;

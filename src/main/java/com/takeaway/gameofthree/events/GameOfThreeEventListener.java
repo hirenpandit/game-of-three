@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class PlayerRegisterEventListener {
+public class GameOfThreeEventListener {
 
     private final GameServiceImpl gameService;
 
@@ -27,6 +27,12 @@ public class PlayerRegisterEventListener {
                      messagingTemplate.convertAndSend("/topic/"+moveDTO.getPlayerId()+"/move", moveDTO);
                  });
 
+    }
+
+    @EventListener
+    public void handleEvent(WinLoseEvent event){
+        log.info("win-lose event fired");
+        messagingTemplate.convertAndSend("/topic/"+event.getPlayerId()+"/status", event);
     }
 
 }

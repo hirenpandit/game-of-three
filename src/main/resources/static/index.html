@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="/app.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <body>
 <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
@@ -16,14 +17,14 @@
 <div id="main-content" class="container">
     <div class="row">
         <div class="col-md-6">
+            <div id="notification"></div>
             <form class="form-inline">
                 <div class="form-group">
-                    <label for="connect">Start Game:</label>
-                    <button id="play" class="btn btn-default" type="submit">
+                    <button id="play" class="btn btn-success" type="submit">
                         Play
                     </button>
-                    <button id="end" class="btn btn-default" type="submit" disabled="disabled">
-                        End Game
+                    <button id="end" class="btn btn-danger" type="submit" disabled="disabled">
+                        Reset
                     </button>
                 </div>
             </form>
@@ -34,7 +35,7 @@
                     <label for="move">What is your move?</label>
                     <input type="text" id="move" class="form-control" placeholder="Your move here...">
                 </div>
-                <button id="send" class="btn btn-default" type="submit">Send</button>
+                <button id="send" class="btn btn-outline-secondary" type="submit">Send</button>
             </form>
         </div>
     </div>
