@@ -1,19 +1,23 @@
 package com.takeaway.gameofthree.service.impl;
 
 import com.takeaway.gameofthree.dto.MoveDTO;
+import com.takeaway.gameofthree.events.AutoMoveEvent;
 import com.takeaway.gameofthree.events.GameOverEvent;
 import com.takeaway.gameofthree.events.MoveEvent;
 import com.takeaway.gameofthree.events.WaitEvent;
 import com.takeaway.gameofthree.service.GameService;
 import com.takeaway.gameofthree.service.PlayerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GameServiceImpl implements GameService {
 
     private final PlayerService playerService;
@@ -43,5 +47,15 @@ public class GameServiceImpl implements GameService {
         } else {
             publisher.publishEvent(new WaitEvent(true));
         }
+    }
+
+    @Override
+    public void autoMove(MoveDTO move) {
+        Random random = new Random();
+        int randInt = random.nextInt(100_000);
+        log.info("random move {}", randInt);
+        move.setCurr(randInt);
+        move.setOperation("-");
+        publisher.publishEvent(new AutoMoveEvent(move));
     }
 }

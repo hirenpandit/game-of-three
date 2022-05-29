@@ -3,6 +3,7 @@ let count = 0;
 let playerId = "";
 let gameId = "";
 let isLive = true;
+let isAuto = true;
 
 function setConnected(connected) {
     $("#play").prop("disabled", connected);
@@ -31,6 +32,7 @@ function connect() {
             setTimeout(()=>{
                 if(isLive) {
                     sendMove();
+                    $('input[type=radio][name=mode]').prop("disabled", true);
                 }
             }, 1000); 
         });
@@ -52,6 +54,16 @@ function connect() {
             const gameOver = JSON.parse(response.body);
             isLive = false;
             showNotification(gameOver.message);
+        });
+
+        stompClient.subscribe('/topic/'+playerId+'/auto', (response) => {
+            const move = JSON.parse(response.body)
+            count = move.curr;
+            move.next = move.curr;
+            move.curr = "-";
+            move.operation =  "-";
+            showMoves(move);
+            sendMove();
         });
     });
     setTimeout(() => {
@@ -76,12 +88,21 @@ function sendMove() {
     if(count == 0){
         count = $("#move").val();
         $('input[type=radio][name=mode]').prop("disabled", true);
+        showMoves(JSON.parse('{"curr": "-", "operation": "-", "next": '+count+'}'))
     } 
     stompClient.send(
                     "/app/move", 
                     {}, 
                     JSON.stringify({'curr': count, 'playerId': playerId, 'gameId': gameId}));
     $("#send").prop("disabled", true);
+}
+
+function sendAutoMove() {
+    stompClient.send(
+        "/app/auto",
+        {},
+        JSON.stringify({"playerId": playerId, "gameId": gameId})
+    )
 }
 
 function startPlay(){
@@ -109,18 +130,28 @@ $(function () {
     playerId = generateId()
     $( "#play" ).click(function() { connect(); });
     $( "#end" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendMove(); });
+    $( "#send" ).click(function() { playFirstMove(); });
     $('input[type=radio][name=mode]').change((e) => {
         modechange(e.target.value);
     });
     $('input[type=radio][name=mode]').prop("disabled", true);
 });
 
+function playFirstMove(){
+    if(isAuto){
+        sendAutoMove();
+    } else {
+        sendMove();
+    }
+}
+
 function modechange(mode) {
     console.log("mode changed to: "+mode);
     if(mode==="auto"){
+        isAuto = true;
         $("#move").prop("disabled", true);
     } else {
+        isAuto = false;
         $("#move").prop("disabled", false);
     }
 }

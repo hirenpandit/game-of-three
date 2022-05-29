@@ -15,9 +15,15 @@ public class GameController {
     private final GameServiceImpl gameService;
 
     @MessageMapping("/move")
-    public void game(MoveDTO move){
+    public void playedMove(MoveDTO move){
         log.info("received move {}", move);
         gameService.playMove(move);
+    }
+
+    @MessageMapping("/auto")
+    public void autoMove(MoveDTO move){
+        log.info("auto move played: {}", move);
+        gameService.autoMove(move);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.takeaway.gameofthree.events.listners;
 
 import com.takeaway.gameofthree.dto.GameOverDTO;
+import com.takeaway.gameofthree.events.AutoMoveEvent;
 import com.takeaway.gameofthree.events.GameOverEvent;
 import com.takeaway.gameofthree.events.MoveEvent;
 import com.takeaway.gameofthree.events.StatusEvent;
@@ -44,6 +45,14 @@ public class GameEventListener {
         messagingTemplate.convertAndSend(
                 "/topic/"+event.getLoserId()+"/win-lose",
                 new GameOverDTO(false, "You Lose!")
+        );
+    }
+
+    @EventListener
+    public void handleEvent(AutoMoveEvent event){
+        messagingTemplate.convertAndSend(
+                "/topic/"+event.getMoveDTO().getPlayerId()+"/auto",
+                event.getMoveDTO()
         );
     }
 

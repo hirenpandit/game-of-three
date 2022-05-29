@@ -11,4 +11,6 @@ public interface GameService {
     String SUBTRACT_ONE = "-1";
     void playMove(MoveDTO move);
 
+    void autoMove(MoveDTO move);
+
 }
