@@ -27,7 +27,7 @@ function connect() {
         stompClient.subscribe('/topic/'+playerId+'/move', function (response) {
             const move = JSON.parse(response.body)
             count = move.next;
-            showMoves("current - "+ move.curr+" next - "+ move.next+" operation - "+move.operation);
+            showMoves(move);
             setTimeout(()=>{
                 if(isLive) {
                     sendMove();
@@ -94,7 +94,11 @@ function showNotification(msg) {
 }
 
 function showMoves(move) {
-    $("#moves").append("<tr><td>" + move + "</td></tr>");
+    $("#moves").append(
+        '<tr><td>'+move.curr+'</td>'
+        +'<td>'+move.operation+'</td>'
+        +'<td>'+move.next+'</td></tr>'
+    );
 }
 
 $(function () {
