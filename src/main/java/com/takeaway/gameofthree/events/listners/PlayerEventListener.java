@@ -29,10 +29,10 @@ public class PlayerEventListener {
                 .getRivalPlayer(event.getPlayerDTO().getGameId(), event.getPlayerDTO().getPlayerId());
         messagingTemplate.convertAndSend("/topic/"+event.getPlayerDTO().getPlayerId()+"/play", event.getPlayerDTO());
         if(rivalPlayer.isPresent()) {
-            publisher.publishEvent(new StatusEvent(rivalPlayer.get(), "Ready to play"));
-            publisher.publishEvent(new StatusEvent(event.getPlayerDTO().getPlayerId(), "Ready to play"));
+            publisher.publishEvent(new StatusEvent(rivalPlayer.get(), "Ready to play", true));
+            publisher.publishEvent(new StatusEvent(event.getPlayerDTO().getPlayerId(), "Ready to play", true));
         } else {
-            publisher.publishEvent(new StatusEvent(event.getPlayerDTO().getPlayerId(), "Waiting for 2nd player"));
+            publisher.publishEvent(new StatusEvent(event.getPlayerDTO().getPlayerId(), "Waiting for 2nd player", false));
         }
 
     }

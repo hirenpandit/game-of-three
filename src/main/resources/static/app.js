@@ -4,6 +4,7 @@ let playerId = "";
 let gameId = "";
 let isLive = true;
 let isAuto = true;
+let isReady = false;
 
 function setConnected(connected) {
     $("#play").prop("disabled", connected);
@@ -47,6 +48,8 @@ function connect() {
         });
         stompClient.subscribe('/topic/'+playerId+'/status', (response) => {
             const status = JSON.parse(response.body);
+            isReady = status.ready;
+            $("#send").prop("disabled", !isReady);
             showNotification(status.message);
         });
 
@@ -135,6 +138,7 @@ $(function () {
         modechange(e.target.value);
     });
     $('input[type=radio][name=mode]').prop("disabled", true);
+    $("#send").prop("disabled", true);
 });
 
 function playFirstMove(){
