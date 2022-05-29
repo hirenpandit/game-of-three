@@ -1,10 +1,11 @@
-package com.takeaway.gameofthree.service;
+package com.takeaway.gameofthree.service.impl;
 
 import com.takeaway.gameofthree.dto.MoveDTO;
 import com.takeaway.gameofthree.events.GameOverEvent;
 import com.takeaway.gameofthree.events.MoveEvent;
 import com.takeaway.gameofthree.events.WaitEvent;
-import com.takeaway.gameofthree.events.StatusEvent;
+import com.takeaway.gameofthree.service.GameService;
+import com.takeaway.gameofthree.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;

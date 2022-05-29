@@ -1,7 +1,8 @@
-package com.takeaway.gameofthree.service;
+package com.takeaway.gameofthree.service.impl;
 
 import com.takeaway.gameofthree.dto.PlayerDTO;
 import com.takeaway.gameofthree.events.PlayerRegisterEvent;
+import com.takeaway.gameofthree.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -12,14 +13,14 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class PlayerServiceImpl implements PlayerService{
+public class PlayerServiceImpl implements PlayerService {
 
     private final ApplicationEventPublisher publisher;
 
     LinkedHashMap<String, List<String>> gameMap = new LinkedHashMap<>();
 
     @Override
-    public void addPlayer(String playerId) {
+    public synchronized void addPlayer(String playerId) {
         LinkedList<Map.Entry<String, List<String>>> linkedList = new LinkedList<>(gameMap.entrySet());
         PlayerDTO player = null;
         if(linkedList.isEmpty()|| linkedList.getLast().getValue().size()==2){
