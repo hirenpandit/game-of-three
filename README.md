@@ -18,5 +18,7 @@ _Note: Alternatively, application can be directly run by executing jar file in r
 
 
 
+GIF:
+
 
 ![ezgif-2-34fa30796f](https://user-images.githubusercontent.com/10435023/170868862-09b1e33c-2b8e-497e-b270-52ee6fa8fc54.gif)
