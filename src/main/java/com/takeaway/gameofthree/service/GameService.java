@@ -9,10 +9,6 @@ public interface GameService {
     String ADD_ZERO =  "added 0";
     String ADD_ONE = "added 1";
     String SUBTRACT_ONE = "added -1";
-    MoveDTO playMove(MoveDTO move);
-
-    void firstMove(MoveDTO move);
-
-    Optional<MoveDTO> getFirstMove();
+    void playMove(MoveDTO move);
 
 }

@@ -21,31 +21,20 @@ public class GameController {
 
     private final SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/first-move")
-    public void firstMove(MoveDTO move){
-        gameService.firstMove(move);
-    }
-
     @MessageMapping("/move")
     public void game(MoveDTO move){
         log.info("received move {}", move);
-        MoveDTO playedMove = gameService.playMove(move);
-        messagingTemplate.convertAndSend(
-                "/topic/"+playedMove.getPlayerId()+"/move",
-                playedMove
-        );
+        gameService.playMove(move);
     }
 
     @MessageMapping("/play")
     public void play(String playerId){
         PlayerDTO player = null;
         try {
-            player = playerService.addPlayer(playerId);
+            playerService.addPlayer(playerId);
         } catch(IllegalStateException ex){
             log.error("unable to add player: {}",ex);
-            player = new PlayerDTO(null, playerId, false, 0);
         }
-        messagingTemplate.convertAndSend("/topic/"+playerId+"/play", player);
     }
 
 }

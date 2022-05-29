@@ -1,4 +1,4 @@
-package com.takeaway.gameofthree.events;
+package com.takeaway.gameofthree.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,10 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class WinLoseEvent {
+public class GameOverDTO {
 
     boolean isWin;
-
-    String playerId;
+    String message;
 
 }

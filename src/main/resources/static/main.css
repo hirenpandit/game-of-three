@@ -1,10 +1,32 @@
 body {
     background-color: #f5f5f5;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: Raleway, sans-serif !important;
 }
 
 .form-inline {
     padding: 10px;
+}
+
+.mode {
+    display: flex;
+    place-items: baseline;
+    padding : 20px !important;
+}
+
+.notif {
+    padding: 10px;
+}
+
+.mode label {
+    margin-right: 20px;
+}
+
+.mode input {
+    margin: 5px;
+}
+
+.send {
+    margin-top: 10px;
 }
 
 #main-content {

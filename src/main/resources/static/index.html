@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello WebSocket</title>
+    <title>Game of Three!</title>
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/main.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="/app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <body>
@@ -17,17 +20,24 @@
 <div id="main-content" class="container">
     <div class="row">
         <div class="col-md-6">
-            <div id="notification"></div>
+            <div id="notification" class="notif"></div>
             <form class="form-inline">
                 <div class="form-group">
-                    <button id="play" class="btn btn-success" type="submit">
+                    <button id="play" class="btn btn-outline-success" type="submit">
                         Play
                     </button>
-                    <button id="end" class="btn btn-danger" type="submit" disabled="disabled">
+                    <button id="end" class="btn btn-outline-danger" type="submit" disabled="disabled">
                         Reset
                     </button>
                 </div>
             </form>
+        </div>
+        <div class="col-md-6 mode">
+            <label>Play Mode</label>
+            <input type="radio" id="auto" name="mode" value="auto" checked>
+            <label for="auto">Automatic</label><br>
+            <input type="radio" id="manual" name="mode" value="manual">
+            <label for="manual">Manual</label><br>
         </div>
         <div class="col-md-6">
             <form class="form-inline">
@@ -35,7 +45,7 @@
                     <label for="move">What is your move?</label>
                     <input type="text" id="move" class="form-control" placeholder="Your move here...">
                 </div>
-                <button id="send" class="btn btn-outline-secondary" type="submit">Send</button>
+                <button id="send" class="btn btn-outline-secondary send" type="submit">Make Move!</button>
             </form>
         </div>
     </div>

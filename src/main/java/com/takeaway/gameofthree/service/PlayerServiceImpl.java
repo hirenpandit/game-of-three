@@ -19,7 +19,7 @@ public class PlayerServiceImpl implements PlayerService{
     LinkedHashMap<String, List<String>> gameMap = new LinkedHashMap<>();
 
     @Override
-    public synchronized PlayerDTO addPlayer(String playerId) {
+    public void addPlayer(String playerId) {
         LinkedList<Map.Entry<String, List<String>>> linkedList = new LinkedList<>(gameMap.entrySet());
         PlayerDTO player = null;
         if(linkedList.isEmpty()|| linkedList.getLast().getValue().size()==2){
@@ -32,9 +32,8 @@ public class PlayerServiceImpl implements PlayerService{
             Map.Entry<String, List<String>> last = linkedList.getLast();
             last.getValue().add(playerId);
             player = new PlayerDTO(last.getKey(), playerId, true, 2);
-            publisher.publishEvent(new PlayerRegisterEvent(player));
         }
-        return player;
+        publisher.publishEvent(new PlayerRegisterEvent(player));
     }
 
     @Override

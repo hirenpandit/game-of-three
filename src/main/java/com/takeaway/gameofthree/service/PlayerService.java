@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface PlayerService {
 
-    PlayerDTO addPlayer(String playerId);
+    void addPlayer(String playerId);
 
     void removePlayers(String gameId);
 

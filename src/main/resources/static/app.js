@@ -2,10 +2,12 @@ var stompClient = null;
 let count = 0;
 let playerId = "";
 let gameId = "";
+let isLive = true;
 
 function setConnected(connected) {
     $("#play").prop("disabled", connected);
     $("#end").prop("disabled", !connected);
+    $("#send").prop("disabled", !connected);
     if (connected) {
         $("#conversation").show();
     }
@@ -13,6 +15,8 @@ function setConnected(connected) {
         $("#conversation").hide();
     }
     $("#moves").html("");
+    isLive = connected;
+    $('input[type=radio][name=mode]').prop("disabled", !connected);
 }
 
 function connect() {
@@ -24,7 +28,11 @@ function connect() {
             const move = JSON.parse(response.body)
             count = move.next;
             showMoves("current - "+ move.curr+" next - "+ move.next+" operation - "+move.operation);
-            $("#send").prop("disabled", false);
+            setTimeout(()=>{
+                if(isLive) {
+                    sendMove();
+                }
+            }, 1000); 
         });
         stompClient.subscribe('/topic/'+playerId+'/play', (response) => {
             const player = JSON.parse(response.body);
@@ -33,21 +41,17 @@ function connect() {
                 showMoves("Only two player can play game at a time!");
             } else {
                 gameId = player.gameId;
-                if(player.count==2)
-                    showNotification("Player 2 Joined!");
-                else
-                    showNotification("Player 1 Joined! Waiting for 2nd Player to Join");
             }
         });
         stompClient.subscribe('/topic/'+playerId+'/status', (response) => {
             const status = JSON.parse(response.body);
-            let msg = "";
-            if(status.win === true){
-                msg = "You win!🎉"
-            } else {
-                msg = "You lose!😕"
-            }
-            showNotification(msg);
+            showNotification(status.message);
+        });
+
+        stompClient.subscribe('/topic/'+playerId+'/win-lose', (response) => {
+            const gameOver = JSON.parse(response.body);
+            isLive = false;
+            showNotification(gameOver.message);
         });
     });
     setTimeout(() => {
@@ -63,12 +67,15 @@ function disconnect() {
     count = 0;
     gameId = "";
     setConnected(false);
+    $("#move").val("");
+    showNotification("")
     console.log("Game Over!");
 }
 
 function sendMove() {
     if(count == 0){
         count = $("#move").val();
+        $('input[type=radio][name=mode]').prop("disabled", true);
     } 
     stompClient.send(
                     "/app/move", 
@@ -94,11 +101,25 @@ $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
+    $("#move").prop("disabled", true);
     playerId = generateId()
     $( "#play" ).click(function() { connect(); });
     $( "#end" ).click(function() { disconnect(); });
     $( "#send" ).click(function() { sendMove(); });
+    $('input[type=radio][name=mode]').change((e) => {
+        modechange(e.target.value);
+    });
+    $('input[type=radio][name=mode]').prop("disabled", true);
 });
+
+function modechange(mode) {
+    console.log("mode changed to: "+mode);
+    if(mode==="auto"){
+        $("#move").prop("disabled", true);
+    } else {
+        $("#move").prop("disabled", false);
+    }
+}
 
 function generateId() {
     var result, i, j;
